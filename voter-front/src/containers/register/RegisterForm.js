@@ -27,6 +27,7 @@ let RegisterForm = (props) => {
                         type="password"
                         validate={[required,minLength2, maxLength100]}
                     />
+                     <br />
                     <Field
                         name="repeatPasswd"
                         component={renderTextField}
