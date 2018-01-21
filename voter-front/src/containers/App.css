@@ -1,0 +1,43 @@
+.pageContainer {
+  width: 80%;
+  margin: 0 auto 0 auto;
+}
+
+.pageContainerNarrow {
+  width: 40%;
+  margin: 0 auto 0 auto;
+}
+
+@media (max-width: 500px) { 
+  .pageContainerNarrow {
+    width: 100%;
+    margin: 0 ;
+    margin: 0 0 0 24px;
+  }
+}
+
+/* .pageContainerNarrowBox{
+  border: solid 1px grey;
+  padding: 50px;
+  margin-top: 50px;
+} */
+
+.addProposalButton{
+  margin-left: 12px;
+}
+
+.footerContainer{
+  position: absolute;
+  bottom: 0
+}
+
+#addPollBtn {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+}
+
+.logInButton, .regiserInButton{
+  margin-right: 12px;
+  margin-bottom: 6px;
+}

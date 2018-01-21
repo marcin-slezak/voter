@@ -1,0 +1,17 @@
+{
+  "name": "voter",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "node start-backend.js",
+    "client": "node start-front.js"
+  },
+  "author": "Marcin Ślęzak",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^3.5.1"
+  }
+}

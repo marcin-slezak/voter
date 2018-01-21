@@ -1,0 +1,8 @@
+export const VOTE = 'VOTE'
+export const UNVOTE = 'UNVOTE'
+export const ADD_PROPOSAL = 'ADD_PROPOSAL'
+export const ADD_POLL = 'ADD_POLL'
+export const SET_POLLS = 'SET_POLLS'
+export const SET_USER = 'SET_USER'
+export const CLEAR_USER = 'CLEAR_USER'
+export const CLEAR_POLLS = 'CLEAR_POLLS'
