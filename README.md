@@ -17,3 +17,17 @@ Because for now it's learning project it was connected together to make setup ea
 - run command `npm install` in main folder, voter-backend and voter-front 
 - init databse with example data, go to voter-backend/cmdUtils and run: `node createDatabase`
 - in main folder run command: `npm start`
+
+## Screenshots
+
+Register:
+
+![Login Page screenshot](/docs/screenshots/1.png?raw=true)
+
+Main screen view:
+
+![Logged user view screenshot](/docs/screenshots/2.png?raw=true)
+
+Poll view:
+
+![Poll view screenshot](/docs/screenshots/3.png?raw=true)
