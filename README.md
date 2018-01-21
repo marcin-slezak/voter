@@ -1,15 +1,15 @@
 # voter
-Learning project using react/redux/nodejs stack. It's simple polling application
+It's simple polling application created to refresh knowledge about redux/react/nodejs tools.
 
 ## Intro
-Voter is simple polling application created to refresh knowledge about redux/react/node stack. It will be company internal tool to create surveys and vote by employees. Everyone can add own create own poll, add option to any poll and vote. For now only simple local authentication is implemented. Application is still [**under development**](https://github.com/marcin-slezak/voter/projects/1) so it's not recommended to use it anywhere (yet).
+It will be company internal tool to create surveys and count employees votes. Everyone can create own poll, add options nd vote. For now only simple local authentication is implemented. Application is still [**under development**](https://github.com/marcin-slezak/voter/projects/1) so it's not recommended to use it anywhere (yet).
 
 ## File Structure
-Project could be split into separate 2 projects (with own package.json, modules and gitignore):
+Project could be split into 2 separate projects (with own package.json files, modules and gitignore):
 - voter-front - SPA using react/redux/material-ui, bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app)
 - voter-backedn - nodejs rest backend using expressjs and sqlite as storage
 
-Because for now it's learning project it was connected together to make setup easier. package.json from main folder contains only "concurrently" to run fronted and backend app using one command `npm start`
+It was connected together to make setup easier. package.json from main folder contains only "concurrently" to run fronted and backend app using one command `npm start`. 
 
 ## Instalation (development environment)
 - you need node and npm installed
