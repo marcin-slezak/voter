@@ -1,6 +1,6 @@
 import React from 'react'
 import { Field, reduxForm } from 'redux-form'
-import {renderTextField,  required,minLength2, maxLength100, } from '../../modules/formUtil'
+import {renderTextField,  required,minLength2, maxLength100, } from '../utils/formUtil'
 
 // Material ui
 import RaisedButton from 'material-ui/RaisedButton';

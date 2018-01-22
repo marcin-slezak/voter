@@ -1,4 +1,4 @@
-import {getAvailableTileImages, getRandomTileImage} from './modules/tileImages'
+import {getAvailableTileImages, getRandomTileImage} from './utils/tileImages'
 
 let exampleInitState = {
     user: {
