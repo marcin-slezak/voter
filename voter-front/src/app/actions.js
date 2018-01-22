@@ -1,5 +1,5 @@
 import {VOTE, UNVOTE, ADD_PROPOSAL, ADD_POLL, SET_POLLS, SET_USER, CLEAR_USER, CLEAR_POLLS} from './actionTypes'
-import {findPollByProposalId} from './index'
+import {findPollByProposalId} from './reducers'
 
 export function vote(proposalId){
     return {

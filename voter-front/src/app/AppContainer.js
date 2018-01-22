@@ -13,17 +13,16 @@ import NavigationPerson from 'material-ui/svg-icons/social/person-outline';
 
 
 // Containers
-import ListOfPolls from './list-of-polls'
-import Poll from './poll'
-import About from './about'
-import LogIn from './log-in'
-import AddPoll from './add-poll'
-import Register from './register'
+import ListOfPolls from '../poll/PollListContainer'
+import Poll from '../poll/PollContainer'
+import LogIn from '../login/LogInContainer'
+import AddPoll from '../poll/AddPollContainer'
+import Register from '../register/RegisterContainer'
 
 // Css
 import './App.css';
 
-import {loadPollsFromAPI, checkSession, logOut} from '../modules/actions'
+import {loadPollsFromAPI, checkSession, logOut} from './actions'
 
 
 const AppMenuContent = (
@@ -34,10 +33,7 @@ const AppMenuContent = (
   
 );
 
-
-
 class App extends Component {
-
 
   constructor(props){
     super(props)
@@ -77,7 +73,6 @@ class App extends Component {
               this.props.isAuthenticated 
               ? (
                 <div>
-                  <Route exact path="/about-us" component={About} />
                   <Route exact path="/log-in" component={LogIn} />
                   <Route exact path="/add-poll" component={AddPoll} />
                   {this.props.polls.length > 0? ( 

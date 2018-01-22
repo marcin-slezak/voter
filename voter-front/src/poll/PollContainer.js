@@ -17,7 +17,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import Divider from 'material-ui/Divider';
 
 // Actions
-import {addVoteToAPI, unVoteToAPI, addProposalToAPI} from '../../modules/actions';
+import {addVoteToAPI, unVoteToAPI, addProposalToAPI} from '../app/actions';
 
 // Other Components/Froms
 import AddNewProposalForm from './AddNewProposalForm'

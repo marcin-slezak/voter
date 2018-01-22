@@ -1,23 +1,23 @@
 import React from 'react'
 import { Field, reduxForm } from 'redux-form'
-import {renderTextField,  required,minLength2, maxLength100, validateTheSamePasswd, isEmail } from '../../modules/formUtil'
+import {renderTextField,  required,minLength2, maxLength100, } from '../utils/formUtil'
 
 // Material ui
 import RaisedButton from 'material-ui/RaisedButton';
 
 
-let RegisterForm = (props) => { 
+let LogInForm = (props) => { 
     
     const { handleSubmit, pristine, submitting, reset } = props
     return <div>
                 <form onSubmit={handleSubmit}>
-                    <h1>Register user</h1>
+                    <h1>Log In</h1>
                     <Field
                         name="login"
                         component={renderTextField}
                         label="Login"
-                        validate={[required,minLength2, maxLength100, isEmail]}
-                        autoFocus
+                        validate={[required,minLength2, maxLength100]}
+                        autoFocus 
                     />
                     <br />
                     <Field
@@ -27,19 +27,11 @@ let RegisterForm = (props) => {
                         type="password"
                         validate={[required,minLength2, maxLength100]}
                     />
-                     <br />
-                    <Field
-                        name="repeatPasswd"
-                        component={renderTextField}
-                        label="Reapeat password"
-                        type="password"
-                        validate={[required,minLength2, maxLength100]}
-                    />
                     <br /><br />
-                    <RaisedButton type="submit" className="regiserInButton" label="Register" primary={true} disabled={pristine || submitting}  />
+                    <RaisedButton type="submit" className="logInButton" label="Log In" primary={true} disabled={pristine || submitting}  />
                     <RaisedButton className="clearButton" label="Clear values" onClick={reset} />
                 </form>
             </div>
   };
 
-export default reduxForm({form: 'RegisterForm', validate: validateTheSamePasswd})(RegisterForm) 
+export default reduxForm({form: 'LogInForm'})(LogInForm) 

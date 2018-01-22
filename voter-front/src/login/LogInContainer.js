@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 
 
 import LogInForm from './LogInForm'
-import {logInAPI} from '../../modules/actions'
+import {logInAPI} from '../app/actions'
 
 import { SubmissionError } from 'redux-form'
 

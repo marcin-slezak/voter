@@ -4,7 +4,7 @@ import { push } from 'react-router-redux'
 import { Link } from 'react-router-dom'
 
 import RegisterForm from './RegisterForm'
-import {logInAPI, register} from '../../modules/actions'
+import {logInAPI, register} from '../app/actions'
 
 import { SubmissionError } from 'redux-form'
 
