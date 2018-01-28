@@ -3,21 +3,21 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { push } from 'react-router-redux'
 
-import AddEditPollForm from './AddEditPollForm'
-import {addPollToAPI} from '../app/actions'
+import PollForm from './PollForm'
+import {addPoll} from '../app/actions'
 
 let AddPollComponent = (props) => {
 
     return (
         <div className="pageContainer">
-         <AddEditPollForm onSubmit={(data) => {props.addPoll(data.pollName); props.goHome(); } } />
+         <PollForm onSubmit={(data) => {props.addPoll(data.pollName); props.goHome(); } } />
         </div>
     );
 }
 
 
 const mapDispatchToProps = dispatch => bindActionCreators({
-    addPoll: (pollName) => addPollToAPI(pollName),
+    addPoll: (pollName) => addPoll(pollName),
     goHome: () => push('/'),
   }, dispatch)
   

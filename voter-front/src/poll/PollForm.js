@@ -6,7 +6,7 @@ import {renderTextField,  required,minLength2, maxLength100, } from '../utils/fo
 import RaisedButton from 'material-ui/RaisedButton';
 
 
-let AddEditPollForm = (props) => { 
+let PollForm = (props) => { 
     
     const { handleSubmit, pristine, submitting } = props
     return <div>
@@ -25,4 +25,4 @@ let AddEditPollForm = (props) => {
             </div>
   };
 
-export default reduxForm({form: 'AddEditPollForm'})(AddEditPollForm) 
+export default reduxForm({form: 'PollForm'})(PollForm) 

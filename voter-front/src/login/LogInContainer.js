@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 
 
 import LogInForm from './LogInForm'
-import {logInAPI} from '../app/actions'
+import {logIn as logInAction} from '../app/actions'
 
 import { SubmissionError } from 'redux-form'
 
@@ -26,7 +26,7 @@ let LogIn = props => {
 
 const mapDispatchToProps = dispatch => {
     return {
-      'logIn': (username, password) => dispatch(logInAPI(username, password)).then((success) => {
+      'logIn': (username, password) => dispatch(logInAction(username, password)).then((success) => {
         if(success){
           dispatch(push('/'))    
         }else{

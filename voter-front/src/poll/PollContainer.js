@@ -17,10 +17,10 @@ import RaisedButton from 'material-ui/RaisedButton';
 import Divider from 'material-ui/Divider';
 
 // Actions
-import {addVoteToAPI, unVoteToAPI, addProposalToAPI} from '../app/actions';
+import {addVote, unVote, addProposal} from '../app/actions';
 
 // Other Components/Froms
-import AddNewProposalForm from './AddNewProposalForm'
+import PollProposalForm from './PollProposalForm'
 
 const narrowColStyle ={
   width: 72,
@@ -92,7 +92,7 @@ const Poll = props => (
         </div>
       ) : false}
 
-      {props.poll.open && props.userVote === false? (<AddNewProposalForm proposals={props.proposals} onSubmit={(data) => {props.addProposal(props.poll.id, data.proposalName); } } />) : false}
+      {props.poll.open && props.userVote === false? (<PollProposalForm proposals={props.proposals} onSubmit={(data) => {props.addProposal(props.poll.id, data.proposalName); } } />) : false}
       
 
     </div>
@@ -101,9 +101,9 @@ const Poll = props => (
 
 const mapDispatchToProps = dispatch => bindActionCreators({
   changePage: () => push('/poll'),
-  vote: (pollId, proposalId) => addVoteToAPI(pollId, proposalId),
-  unvote: proposalId => unVoteToAPI(proposalId),
-  addProposal: (pollId, proposalName) => addProposalToAPI(pollId, proposalName)
+  vote: (pollId, proposalId) => addVote(pollId, proposalId),
+  unvote: proposalId => unVote(proposalId),
+  addProposal: (pollId, proposalName) => addProposal(pollId, proposalName)
 }, dispatch)
 
 const mapStateToProps = (state, ownProps) => { 

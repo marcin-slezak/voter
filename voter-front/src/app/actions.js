@@ -1,33 +1,44 @@
 import {VOTE, UNVOTE, ADD_PROPOSAL, ADD_POLL, SET_POLLS, SET_USER, CLEAR_USER, CLEAR_POLLS} from './actionTypes'
 import {findPollByProposalId} from './reducers'
+import {
+        registerAPI, 
+        logInAPI,
+        getUserAPI, 
+        logOutAPI,
+        getPollsAPI,
+        unvoteAPI, 
+        voteAPI,
+        addProposalAPI,
+        addPollAPI 
+    } from './backendAPI'
 
-export function vote(proposalId){
+export function voteAction(proposalId){
     return {
         type: VOTE,
         proposalId
     }
 }
 
-export function clearUser(){
+export function clearUserAction(){
     return {
         type: CLEAR_USER
     }
 }
 
-export function clearPolls(){
+export function clearPollsAction(){
     return {
         type: CLEAR_POLLS,
     }
 }
 
-export function unvote(pollId){
+export function unvoteAction(pollId){
     return {
         type: UNVOTE,
         pollId
     }
 }
 
-export function addProposal(proposalId, pollId, proposalName){
+export function addProposalAction(proposalId, pollId, proposalName){
     return {
         type: ADD_PROPOSAL,
         proposalId,
@@ -36,7 +47,7 @@ export function addProposal(proposalId, pollId, proposalName){
     }
 }
 
-export function addPollRow(pollId, pollName, imageUrl, author, isOpen = true, proposals = [], userVote = false){
+export function addPollRowAction(pollId, pollName, imageUrl, author, isOpen = true, proposals = [], userVote = false){
     return {
         type: ADD_POLL,
         pollId,
@@ -50,14 +61,14 @@ let getRandom = function (list) {
     return list[Math.floor((Math.random()*list.length))];
 } 
 
-export function setPolls(polls){
+export function setPollsAction(polls){
     return {
         type: SET_POLLS,
         polls
     }
 }
 
-export function setUser(user){
+export function setUserAction(user){
     return {
         type: SET_USER,
         user: {id: user.id, name: user.name}
@@ -66,64 +77,62 @@ export function setUser(user){
 
 // actions with side effect redux-thunk
 
-export function loadPollsFromAPI(){
+export function loadPolls(){
     return (dispatch, getState) => {
-        return getPollsAPI(getState().user.id).then(function(response) {
-            response.json().then(data => dispatch(setPolls(data)) )
-        });//@todo handle error
+        return getPollsAPI(getState().user.id).then(data => dispatch(setPollsAction(data)) );//@todo handle error
     }
 }
 
-export function addPollToAPI( pollName,  isOpen = true){
+export function addPoll( pollName,  isOpen = true){
     return (dispatch, getState) => {
         const imageUrl = getRandom(getState().pollsImages);
         const author = getState().user.name;
         return addPollAPI(pollName, imageUrl, author, isOpen).then(resp => {
                 if(resp.success === true){
-                    dispatch(addPollRow(resp.insertedId, pollName, imageUrl, author, isOpen))
+                    dispatch(addPollRowAction(resp.insertedId, pollName, imageUrl, author, isOpen))
                 }//@todo handle error
         })
     }
 }
 
-export function addProposalToAPI(pollId, proposalName){
+export function addProposal(pollId, proposalName){
     return (dispatch, getState) => {
         return addProposalAPI(proposalName, pollId).then(resp => {
                 if(resp.success === true){
-                    dispatch(addProposal(resp.insertedId,pollId, proposalName))
-                    dispatch(addVoteToAPI(pollId,resp.insertedId))
+                    dispatch(addProposalAction(resp.insertedId,pollId, proposalName))
+                    dispatch(addVote(pollId,resp.insertedId))
                 }//@todo handle error
         })
     }
 }
 
-export function addVoteToAPI(pollId, proposalId){
+export function addVote(pollId, proposalId){
     return (dispatch, getState) => {
         return voteAPI(getState().user.id,  proposalId).then(resp => {
                 if(resp.success === true){
-                    dispatch(vote(proposalId))
+                    dispatch(voteAction(proposalId))
                 } //@todo handle error
         })
     }
 }
 
-export function unVoteToAPI(proposalId){
+export function unVote(proposalId){
     return (dispatch, getState) => {
         return unvoteAPI(proposalId, getState().user.id).then(resp => {
             if(resp.success === true){
-                dispatch(unvote( findPollByProposalId(proposalId, getState().polls).id ))
+                dispatch(unvoteAction( findPollByProposalId(proposalId, getState().polls).id ))
             } //@todo handle error
         })
     }
 }
 
 
-export function logInAPI(username, password){
+export function logIn(username, password){
     return (dispatch, getState) => {
-        return logIn(username, password).then( (resp) => {
+        return logInAPI(username, password).then( (resp) => {
             if(resp.success === true){
-                dispatch(setUser( {name: resp.user.username, id: resp.user.id} ))
-                dispatch(loadPollsFromAPI())
+                dispatch(setUserAction( {name: resp.user.username, id: resp.user.id} ))
+                dispatch(loadPolls())
                 return true;
             }else{
                 return false;
@@ -144,8 +153,8 @@ export function logOut(){
     return (dispatch, getState) => {
         return logOutAPI().then( (resp) => {
             if(resp.success === true){
-                dispatch(clearUser())
-                dispatch(clearPolls())
+                dispatch(clearUserAction())
+                dispatch(clearPollsAction())
             } //@todo handle error
         })
     }
@@ -155,8 +164,8 @@ export function checkSession(){
     return (dispatch, getState) => {
         return getUserAPI().then( (resp) => {
             if(resp.success === true){
-                dispatch(setUser( {name: resp.user.username, id: resp.user.id} ))
-                dispatch(loadPollsFromAPI())
+                dispatch(setUserAction( {name: resp.user.username, id: resp.user.id} ))
+                dispatch(loadPolls())
                 return true
             }else{
                 return false
@@ -165,65 +174,3 @@ export function checkSession(){
         })
     }
 }
-
-// ####################   API #########################################
-
-const registerAPI = (username, password) => {
-    return fetch('/api/user/register', {
-        method: 'POST',  
-        headers: {'Accept': 'application/json, text/plain, */*','Content-Type': 'application/json',},
-        credentials: 'include', 
-        body: JSON.stringify({username: username, password})}).then(response => response.json());
-}
-
-const logIn = (username, password) => {
-    return fetch('/api/user/login', {
-        method: 'POST',  
-        headers: {'Accept': 'application/json, text/plain, */*','Content-Type': 'application/json',},
-        credentials: 'include', 
-        body: JSON.stringify({username: username, password})}).then(response => response.json());
-}
-
-const getUserAPI = (username, password) => {
-    return fetch('/api/user', {
-        credentials: 'include',     
-    }).then(response => response.json());
-}
-
-const logOutAPI = (username, password) => {
-    return fetch('/api/user/logout', {
-        credentials: 'include',     
-    }).then(response => response.json());
-}
-
-const getPollsAPI = (userId) => {
-    return fetch('/api/poll?user_id='+userId, {credentials: 'include'})
-}
-
-const unvoteAPI = (proposalId, userId) => fetch('/api/vote', {
-        method: 'DELETE',  
-        headers: {'Accept': 'application/json, text/plain, */*','Content-Type': 'application/json'},
-        credentials: 'include',
-        body: JSON.stringify({user_id: userId ,proposal_id: proposalId})
-    }).then(response => response.json())
-
-const voteAPI = (userId, proposalId) => fetch('/api/vote', {
-    method: 'POST',  
-    headers: {'Accept': 'application/json, text/plain, */*','Content-Type': 'application/json'}, 
-    credentials: 'include',
-    body: JSON.stringify({userId ,proposalId})
-}).then(response => response.json())
-
-const addProposalAPI = (proposalName, pollId) => fetch('/api/proposal', {
-    method: 'POST',  
-    headers: {'Accept': 'application/json, text/plain, */*','Content-Type': 'application/json'}, 
-    credentials: 'include',
-    body: JSON.stringify({name: proposalName,votes: 1, poll_id: pollId})
-}).then(response => response.json())
-
-const addPollAPI = (pollName, imageUrl, author, isOpen) => fetch('/api/poll', {
-    method: 'POST',  
-    headers: {'Accept': 'application/json, text/plain, */*','Content-Type': 'application/json'}, 
-    credentials: 'include',
-    body: JSON.stringify({name: pollName, imgUrl: imageUrl, author, isOpen})
-}).then(response => response.json()) 

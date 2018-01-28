@@ -4,7 +4,7 @@ import { push } from 'react-router-redux'
 import { Link } from 'react-router-dom'
 
 import RegisterForm from './RegisterForm'
-import {logInAPI, register} from '../app/actions'
+import {logIn, register} from '../app/actions'
 
 import { SubmissionError } from 'redux-form'
 
@@ -29,7 +29,6 @@ const redirectToHomeIfSuccessOrDisplayFeedback = (dispatch) => (resp) => {
     dispatch(push('/'))    
     return true
   }else{
-    console.log({ login: resp.validation.username, _error: resp.validation.username })
     throw new SubmissionError({ login: resp.validation.username, _error: resp.validation.username })
   } 
 }
@@ -38,7 +37,7 @@ const mapDispatchToProps = dispatch => {
     return {
       'register': (username, password) => dispatch(register(username, password))
                                             .then(redirectToHomeIfSuccessOrDisplayFeedback(dispatch))
-                                            .then(() => dispatch(logInAPI(username, password)))
+                                            .then(() => dispatch(logIn(username, password)))
                                             .then(() => dispatch(push('/')))
     }
   }

@@ -22,7 +22,7 @@ import Register from '../register/RegisterContainer'
 // Css
 import './App.css';
 
-import {loadPollsFromAPI, checkSession, logOut} from './actions'
+import {checkSession, logOut} from './actions'
 
 
 const AppMenuContent = (
@@ -102,7 +102,6 @@ const mapDispatchToProps = dispatch =>  {
   return {
     redirectToLogin: () => dispatch(push('/log-in')),
     redirectToHome: () => dispatch(push('/')),
-    loadPollsFromAPI: () => dispatch(loadPollsFromAPI()),
     checkSessionAndRedirectIfNotLogged: (currentUrl) => dispatch(checkSession()).then(loggedIn => {
       if( loggedIn === false &&  ! ['/log-in', '/register'].includes(currentUrl) ){
             dispatch(push('/log-in'))
