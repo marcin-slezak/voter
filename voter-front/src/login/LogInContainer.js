@@ -13,13 +13,11 @@ import { SubmissionError } from 'redux-form'
 let LogIn = props => {
   return (
   <div className="pageContainerNarrow">
-    
     <div className="pageContainerNarrowBox">
       <LogInForm onSubmit={(data) => props.logIn(data.login, data.passwd)} />
       <br />
       <Link to="/register">Register user</Link>
     </div>
-    
   </div>
   )
 }

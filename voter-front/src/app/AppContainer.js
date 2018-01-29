@@ -33,7 +33,7 @@ const AppMenuContent = (
   
 );
 
-class App extends Component {
+class AppContainer extends Component {
 
   constructor(props){
     super(props)
@@ -120,4 +120,4 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App) );
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(AppContainer) );
