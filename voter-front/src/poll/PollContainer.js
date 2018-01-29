@@ -17,7 +17,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import Divider from 'material-ui/Divider';
 
 // Actions
-import {addVote, unVote, addProposal} from '../app/actions';
+import {addVote, unVote, addProposal} from './PollActions';
 
 // Other Components/Froms
 import PollProposalForm from './PollProposalForm'

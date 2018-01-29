@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { push } from 'react-router-redux'
 
 import PollForm from './PollForm'
-import {addPoll} from '../app/actions'
+import {addPoll} from './PollActions'
 
 let AddPollComponent = (props) => {
 
