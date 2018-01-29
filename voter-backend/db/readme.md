@@ -1,0 +1,1 @@
+in this folder we should have voterdb.sqlite file containing sqlite databse

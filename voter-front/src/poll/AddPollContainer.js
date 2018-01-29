@@ -15,7 +15,6 @@ let AddPollComponent = (props) => {
     );
 }
 
-
 const mapDispatchToProps = dispatch => bindActionCreators({
     addPoll: (pollName) => addPoll(pollName),
     goHome: () => push('/'),

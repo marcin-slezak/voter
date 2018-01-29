@@ -50,8 +50,6 @@ export function addPollRowAction(pollId, pollName, imageUrl, author, isOpen = tr
     }
 }
 
-
-
 export function setPollsAction(polls){
     return {
         type: SET_POLLS,
