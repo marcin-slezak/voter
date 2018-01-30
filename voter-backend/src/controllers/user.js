@@ -1,6 +1,6 @@
 exports.getUser = function(req,res){
     if(req.isAuthenticated()){
-        res.json({success: true, user: { username: req.user.username, id: req.user.id }});
+        res.json({success: true, user: { username: req.user.username, id: req.user.id, is_admin: req.user.is_admin }});
     }else{
         res.json({success: false, user: false});
     }
@@ -18,7 +18,7 @@ exports.login =  (passport) => function(req, res, next) {
       if (!user) { return res.json({success: false}); }
       req.logIn(user, function(err) {
         if (err) { return next(err); }
-        return res.json({success: true,  user: { username: req.user.username, id: req.user.id }})
+        return res.json({success: true,  user: { username: req.user.username, id: req.user.id,  is_admin: req.user.is_admin }})
       });
     })(req, res, next);
   }

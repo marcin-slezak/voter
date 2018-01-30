@@ -60,7 +60,7 @@ export function setPollsAction(polls){
 export function setUserAction(user){
     return {
         type: SET_USER,
-        user: {id: user.id, name: user.name}
+        user: {id: user.id, name: user.name, is_admin: user.is_admin}
     }
 }
 
@@ -76,7 +76,7 @@ export function logIn(username, password){
     return (dispatch, getState) => {
         return logInAPI(username, password).then( (resp) => {
             if(resp.success === true){
-                dispatch(setUserAction( {name: resp.user.username, id: resp.user.id} ))
+                dispatch(setUserAction( {name: resp.user.username, id: resp.user.id, is_admin: resp.user.is_admin} ))
                 dispatch(loadPolls())
                 return true;
             }else{
@@ -101,7 +101,7 @@ export function checkSession(){
     return (dispatch, getState) => {
         return getUserAPI().then( (resp) => {
             if(resp.success === true){
-                dispatch(setUserAction( {name: resp.user.username, id: resp.user.id} ))
+                dispatch(setUserAction( {name: resp.user.username, id: resp.user.id, is_admin: resp.user.is_admin} ))
                 dispatch(loadPolls())
                 return true
             }else{

@@ -67,7 +67,7 @@ const userReducer = (state = {}, action) => {
     case CLEAR_USER:
       return {}
     case SET_USER:
-      return {id: action.user.id, name: action.user.name}
+      return {id: action.user.id, name: action.user.name, is_admin: action.user.is_admin}
     default:
       return state;
   }

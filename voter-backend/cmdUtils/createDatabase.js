@@ -40,7 +40,8 @@ const createProposalTableSql = `
   CREATE TABLE user(
     user_id integer PRIMARY KEY AUTOINCREMENT,
     username text NOT NULL,
-    password text NOT NULL
+    password text NOT NULL,
+    is_admin integer NOT NULL DEFAULT 0
   )`;
 
   const exampleUsers = [
