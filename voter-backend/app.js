@@ -3,15 +3,16 @@ var express = require('express'),
   port = process.env.PORT || 3003;
   
 var session = require('express-session')
-var sqlite3 = require('sqlite3').verbose()
-var db = new sqlite3.Database('./db/voterdb.sqlite');
 let passport = require('passport')
 
-let pollModel = require('./src/models/pollModel')
-let voteModel = require('./src/models/voteModel')
-let proposalModel = require('./src/models/proposalModel')
-let userModel = require('./src/models/userModel').getUserModel(db)
+const Sequelize = require('sequelize');
+const sequelize = new Sequelize('mainDB', null, null, {
+    dialect: 'sqlite',
+    storage: 'db/voterdb.sqlite',
+    operatorsAliases: Sequelize.Op
+});
 
+({User,Poll,Proposal,Vote} = require('./src/models2/modelsWithAssociations').get(sequelize))
 
 let homeController = require('./src/controllers/home')
 let pollController = require('./src/controllers/poll')
@@ -20,7 +21,7 @@ let voteController = require('./src/controllers/vote')
 let userController = require('./src/controllers/user')
 
 let passportConfig = require('./src/config/passport')
-passportConfig.configurePassport(userModel)
+passportConfig.configurePassport(User)
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -42,18 +43,18 @@ function isLoggedIn(req, res, next) {
 
 //protected
 app.route('/').get(homeController.mainPage)
-app.route('/api/poll').get(isLoggedIn, pollController.getPoll(pollModel,db))
-app.route('/api/poll').post(isLoggedIn, pollController.addPoll(db, pollModel))
-app.route('/api/proposal').post(isLoggedIn, proposalController.addProposal(db,proposalModel))
-app.route('/api/vote').post(isLoggedIn, voteController.addVote(db, voteModel))
-app.route('/api/vote').delete(isLoggedIn, voteController.deleteVote(db, voteModel))
+app.route('/api/poll').get(isLoggedIn, pollController.getPoll(Poll, User, Proposal, Vote))
+app.route('/api/poll').post(isLoggedIn, pollController.addPoll(Poll))
+app.route('/api/proposal').post(isLoggedIn, proposalController.addProposal(Proposal))
+app.route('/api/vote').post(isLoggedIn, voteController.addVote(Vote))
+app.route('/api/vote').delete(isLoggedIn, voteController.deleteVote(Vote))
 
 //open
-app.route('/api/user/test').get(userController.test(userModel))  
+// app.route('/api/user/test').get(userController.test(userModel))  
 app.get('/api/user', userController.getUser);
 app.route('/api/user/logout').get(userController.logout)
 app.post('/api/user/login', userController.login(passport));
-app.post('/api/user/register', userController.register(userModel));
+// app.post('/api/user/register', userController.register(userModel));
 
 
 ;
