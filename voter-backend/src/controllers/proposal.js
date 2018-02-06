@@ -1,6 +1,10 @@
-exports.addProposal = (db, proposalModel) => function(req, res) {
-    //@todo check if poll exist
-    proposalModel.addProposal(db, req.body.name, req.body.votes, req.body.poll_id)
-        .then(insertedId => res.json({success: true, insertedId: insertedId}))
-        .catch(err => res.json({success: false, err}))
+exports.addProposal = (proposalModel) => function(req, res) {
+    proposalModel.create({
+        name: req.body.name,
+        pollId: req.body.poll_id
+    }).then(proposal => {
+        res.json({success: true, insertedId: proposal.id})
+    }).catch(err => {
+        res.json({success: false, err})
+    })
 }

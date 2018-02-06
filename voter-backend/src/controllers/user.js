@@ -1,6 +1,6 @@
 exports.getUser = function(req,res){
     if(req.isAuthenticated()){
-        res.json({success: true, user: { username: req.user.username, id: req.user.id, is_admin: req.user.is_admin }});
+        res.json({success: true, user: { username: req.user.userName, id: req.user.id, is_admin: req.user.isAdmin }});
     }else{
         res.json({success: false, user: false});
     }
@@ -18,19 +18,10 @@ exports.login =  (passport) => function(req, res, next) {
       if (!user) { return res.json({success: false}); }
       req.logIn(user, function(err) {
         if (err) { return next(err); }
-        return res.json({success: true,  user: { username: req.user.username, id: req.user.id,  is_admin: req.user.is_admin }})
+        return res.json({success: true,  user: { username: req.user.userName, id: req.user.id,  is_admin: req.user.isAdmin }})
       });
     })(req, res, next);
   }
-
-
-exports.test = ( userModel) => function(req,res){
-    if(req.user){
-        res.send('user endpoint + '+ req.user.username)
-    }else{
-        res.send('user endpoint without login ')
-    }
-}
 
 exports.register = ( userModel) => function(req,res){
     
@@ -39,17 +30,19 @@ exports.register = ( userModel) => function(req,res){
     }else if( req.body.password === undefined){
         res.json({success: false, validation: {password: 'Password is required'}});
     }else{
-        userModel.findOne({username: req.body.username}, (err, user)=> {
-            if(err){
-                res.json({success: false, err});
-            }else{
-                if(user === false){
-                    userModel.addUsers(req.body.username, req.body.password)
+        userModel.findOne({where: {userName: req.body.username}}).then(user => {
+            if(user === null){
+                return userModel.create({
+                    userName: req.body.username, 
+                    password: userModel.generateHash(req.body.password)
+                }).then(user => {
                     res.json({success: true});
-                }else{
-                    res.json({success: false, validation: {username: 'User exist'}});
-                }
+                })
+            }else{
+                res.json({success: false, validation: {username: 'User exist'}})
             }
+        }).catch(err => {
+            res.json({success: false, err});
         })
     }
 

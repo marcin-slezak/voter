@@ -1,120 +1,109 @@
-var sqlite3 = require('sqlite3').verbose()
-var db = new sqlite3.Database('../db/voterdb.sqlite');
+const Sequelize = require('sequelize');
+const sequelize = new Sequelize('mainDB', null, null, {
+    dialect: 'sqlite',
+    storage: '../db/voterdb.sqlite',
+    operatorsAliases: Sequelize.Op
+});
 
-const createPollTableSql = `
-  CREATE TABLE poll(
-    poll_id integer PRIMARY KEY AUTOINCREMENT,
-    name text NOT NULL,
-    image_url text NOT NULL,
-    author text NOT NULL,
-    is_open iteger NOT NULL
-  )`;
+const User = sequelize.define('user', {    
+    userName: {
+      type: Sequelize.STRING
+    },
+    password: {
+      type: Sequelize.STRING
+    },
+    isAdmin: {
+        type: Sequelize.BOOLEAN
+    }
+  });
+
+const Poll = sequelize.define('poll', {
+    name: {
+        type: Sequelize.STRING
+    },
+    imageUrl: {
+        type: Sequelize.STRING
+    },
+    isOpen: {
+        type: Sequelize.BOOLEAN
+    }
+})
   
-  const examplePolls = [
-    ['Where we should organize integration trip?', '/static/media/10.2ec34c0f.jpg', 'MarcinŚ', 1],
-    ['What for lunch?', '/static/media/10.2ec34c0f.jpg', 'JanT', 1],
-    ['Whats blocker of the week?', '/static/media/7.8b0b01db.jpg', 'JanT', 0]
-  ];
 
-const createProposalTableSql = `
-  CREATE TABLE proposal(
-    proposal_id integer PRIMARY KEY AUTOINCREMENT,
-    name text NOT NULL,
-    votes iteger NOT NULL,
-    poll_id integer NOT NULL,
-    FOREIGN KEY (poll_id) REFERENCES poll (poll_id)
-  )`;
+const Proposal = sequelize.define('proposal', {
+    name: {
+        type: Sequelize.STRING
+    }
+})
 
-  const exampleProposal = [
-    ['Berlin', 2,1],
-    ['Cracow', 20,1],
-    ['London', 32,1],
-    ['Mad Mick', 666,2],
-    ['MacDonald', 0,2],
-    ['Subway', 2,2],
-    ['Company budget without sign off', 43,3],
-    ['Missing coffe', 200,3]
-  ];
+const Vote = sequelize.define('vote', {})
 
-  const createUserTableSql = `
-  CREATE TABLE user(
-    user_id integer PRIMARY KEY AUTOINCREMENT,
-    username text NOT NULL,
-    password text NOT NULL,
-    is_admin integer NOT NULL DEFAULT 0
-  )`;
+Poll.hasMany(Proposal)
+Proposal.belongsTo(Poll)
 
-  const exampleUsers = [
-    ['MarcinŚ', '$2a$08$yT5LQT8Nw3FiCXib4lvn9OIqLB/rDHFxIhRjpd7zIBLIoy9qoCV8q'],
-    ['MichałJ', '$2a$08$yT5LQT8Nw3FiCXib4lvn9OIqLB/rDHFxIhRjpd7zIBLIoy9qoCV8q'],
-  ];
+User.hasMany(Poll, {as: 'Author', foreignKey: "authorId"})
 
-  const createVoteTableSql = `
-  CREATE TABLE vote(
-    user_id integer NOT NULL,
-    proposal_id integer NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES user (user_id),
-    FOREIGN KEY (proposal_id) REFERENCES proposal (proposal_id),
-    UNIQUE( user_id, proposal_id)
-  )`;
+Proposal.belongsToMany(User, {through: Vote, as: "Vote"})
+User.belongsToMany(Proposal, {through: Vote, as: "Vote"})
 
-  const exampleVotes = [
-    [1,1],
-    [2,2],
-  ];
+let loadTestData = async () => {
+    let user = await User.create({
+        userName: "MarcinŚ",
+        password: "$2a$08$yT5LQT8Nw3FiCXib4lvn9OIqLB/rDHFxIhRjpd7zIBLIoy9qoCV8q",
+        isAdmin: 1
+    })
+
+    let poll1 = await Poll.create({
+        name: 'Where we should go for integration trip?',
+        imageUrl: "/static/media/10.2ec34c0f.jpg",
+        isOpen: 1,
+        authorId: user.id
+    })
+
+    let poll2 = await Poll.create({
+        name: 'Top 3 blockers 2018',
+        imageUrl: "/static/media/7.8b0b01db.jpg",
+        isOpen: 0,
+        authorId: user.id
+    })
+
+    let proposal1 = await Proposal.create({
+        name: "Cracow"    
+    })
+
+    await proposal1.setPoll(poll1)
+
+    let proposal2 = await Proposal.create({
+        name: "Zakopane"    
+    })
+
+    await proposal2.setPoll(poll1)
+
+    
+    let proposal3 = await Proposal.create({
+        name: "Budged 2018 not signed"    
+    })
+
+    await proposal3.setPoll(poll2)
+
+    await user.addVote(proposal2)
+}
+
+let createDatabase = async () => {
+    await User.sync({force: true})
+    await Poll.sync({force:true})
+    await Proposal.sync({force:true})
+    await Vote.sync({force:true})
+}  
 
 
-  function addExamplePolls(db) {
-    let addPollStmt = db.prepare('INSERT INTO poll (name, image_url, author, is_open) VALUES (?, ?, ?, ?)');
 
-    examplePolls.forEach(pollRow => {
-      addPollStmt.run(...pollRow);
-    });
+let createDatabaseAndLoadTestData = async () => {
+     await createDatabase()
+     await loadTestData()
+    
+}
 
-    addPollStmt.finalize()
-  }
+createDatabaseAndLoadTestData();
 
-  function addExampleProposals(db) {
-    let addProposalStmt = db.prepare('INSERT INTO proposal (name, votes, poll_id) VALUES (?, ?, ?)');
-
-    exampleProposal.forEach(proposalRow => {
-      addProposalStmt.run(...proposalRow);
-    });
-
-    addProposalStmt.finalize()
-  }
-
-  function addExampleUsers(db) {
-    let addUserStmt = db.prepare('INSERT INTO user (username, password) VALUES (?, ?)');
-
-    exampleUsers.forEach(userRow => {
-      addUserStmt.run(...userRow);
-    });
-
-    addUserStmt.finalize()
-  }
-
-  function addExampleVotes(db) {
-    let addViteStmt = db.prepare('INSERT INTO vote (user_id, proposal_id) VALUES (?, ?)');
-
-    exampleVotes.forEach(voteRow => {
-      addViteStmt.run(...voteRow);
-    });
-
-    addViteStmt.finalize()
-  }
-
-  db.serialize(function () {
-      db.run(createPollTableSql)
-      db.run(createProposalTableSql)
-      db.run(createUserTableSql)
-      db.run(createVoteTableSql)
-      addExamplePolls(db)
-      addExampleProposals(db)
-      addExampleUsers(db)
-      addExampleVotes(db)
-  })
-  
-  db.close()
-
-  console.log('db/tables created and example data imported ');
+console.log('EOS')
