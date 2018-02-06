@@ -50,11 +50,10 @@ app.route('/api/vote').post(isLoggedIn, voteController.addVote(Vote))
 app.route('/api/vote').delete(isLoggedIn, voteController.deleteVote(Vote))
 
 //open
-// app.route('/api/user/test').get(userController.test(userModel))  
 app.get('/api/user', userController.getUser);
 app.route('/api/user/logout').get(userController.logout)
 app.post('/api/user/login', userController.login(passport));
-// app.post('/api/user/register', userController.register(userModel));
+app.post('/api/user/register', userController.register(User));
 
 
 ;
