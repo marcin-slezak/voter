@@ -12,7 +12,7 @@ const sequelize = new Sequelize('mainDB', null, null, {
     operatorsAliases: Sequelize.Op
 });
 
-({User,Poll,Proposal,Vote} = require('./src/models2/modelsWithAssociations').get(sequelize))
+({User,Poll,Proposal,Vote} = require('./src/models/modelsWithAssociations').get(sequelize))
 
 let homeController = require('./src/controllers/home')
 let pollController = require('./src/controllers/poll')
